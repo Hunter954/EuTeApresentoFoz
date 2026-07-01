@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mv-page-head">
+  <span>Antes e Depois</span>
+  <h1>A cidade em comparação</h1>
+  <p>Veja como lugares especiais de Foz mudaram com o tempo sem perder suas histórias.</p>
+</section>
+<div class="mv-before-page-grid">
+  {% for item in items %}
+    <article class="mv-before-card mv-before-card--page" data-before-after>
+      <div class="mv-before-card__images">
+        <div class="mv-before-img mv-before-img--before" {% if item.before_image %}style="background-image:url('{{ item.before_image }}')"{% endif %}></div>
+        <div class="mv-before-img mv-before-img--after" {% if item.after_image %}style="background-image:url('{{ item.after_image }}')"{% endif %}></div>
+        <span class="mv-before-divider"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i></span>
+      </div>
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.location }}{% if item.location and (item.year_before or item.year_after) %} • {% endif %}{{ item.year_before or 'Antes' }} x {{ item.year_after or 'Hoje' }}</p>
+    </article>
+  {% else %}
+    <div class="mv-empty">Cadastre comparações com imagem antiga e atual no painel administrativo.</div>
+  {% endfor %}
+</div>
+{% endblock %}

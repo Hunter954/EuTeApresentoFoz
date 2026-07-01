@@ -1,0 +1,135 @@
+{% extends 'admin/layout.html' %}
+{% block admin_title %}Insights{% endblock %}
+{% block page_title %}Insights do site{% endblock %}
+{% block page_subtitle %}Leitura de performance do período selecionado com visão detalhada de sessões, pageviews e usuários.{% endblock %}
+{% block admin_content %}
+<section class="stats-grid insights-metrics-grid insights-metrics-grid--top">
+  {% for card in summary_cards %}
+  <article class="stat-card">
+    <span>{{ card.label }}</span>
+    <strong>{{ '{:,}'.format(card.value).replace(',', '.') }}</strong>
+    <small>
+      {% if card.delta > 0 %}
+        <span class="text-success">▲ {{ '%.1f'|format(card.delta) }}%</span>
+      {% elif card.delta < 0 %}
+        <span class="text-danger">▼ {{ '%.1f'|format(card.delta|abs) }}%</span>
+      {% else %}
+        <span class="text-muted">0%</span>
+      {% endif %}
+      vs. período anterior
+    </small>
+  </article>
+  {% endfor %}
+
+  <article class="stat-card insights-pageviews-card">
+    <span>Pageviews totais</span>
+    <strong>{{ dashboard_stats.pv_total }}</strong>
+    <small>Últimas 24h: {{ dashboard_stats.pv_24h }}</small>
+  </article>
+</section>
+
+<section class="panel-card insights-chart-card">
+  <div class="panel-head insights-chart-head">
+    <div>
+      <h2>Relatório visual</h2>
+      <p>Escolha o período e clique na métrica para trocar o gráfico.</p>
+    </div>
+    <form class="insights-filter-form" method="get">
+      <input type="hidden" name="metric" value="{{ selected_metric }}">
+      <div>
+        <label for="insightsFrom">De</label>
+        <input id="insightsFrom" class="form-control" type="date" name="from" value="{{ insights.start_date.isoformat() }}">
+      </div>
+      <div>
+        <label for="insightsTo">Até</label>
+        <input id="insightsTo" class="form-control" type="date" name="to" value="{{ insights.end_date.isoformat() }}">
+      </div>
+      <button class="btn btn-dark" type="submit">Atualizar gráfico</button>
+    </form>
+  </div>
+
+  <div class="insights-metric-switcher">
+    {% for metric_key, metric_name in allowed_metrics.items() %}
+      <a class="metric-pill {% if selected_metric == metric_key %}active{% endif %}" href="{{ url_for('admin.insights_page', metric=metric_key, from=insights.start_date.isoformat(), to=insights.end_date.isoformat()) }}">
+        {{ metric_name }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="insights-chart-header-row">
+    <div>
+      <strong>{{ metric_label }}</strong>
+      <span>{{ insights.start_date.strftime('%d/%m/%Y') }} até {{ insights.end_date.strftime('%d/%m/%Y') }}</span>
+    </div>
+  </div>
+
+  <div class="insights-chart-wrap" id="insightsChartWrap">
+    <div class="chart-hover-tooltip" id="chartHoverTooltip" aria-hidden="true">
+      <span class="chart-hover-date"></span>
+      <strong class="chart-hover-value"></strong>
+    </div>
+    <svg viewBox="0 0 {{ metric_chart.width }} {{ metric_chart.height }}" class="insights-svg-chart" role="img" aria-label="Gráfico de {{ metric_label }}">
+      {% for tick in metric_chart.y_grid %}
+        <line x1="{{ metric_chart.pad_left }}" y1="{{ tick.y }}" x2="{{ metric_chart.width - metric_chart.pad_right }}" y2="{{ tick.y }}" class="chart-grid-line"></line>
+        <text x="{{ metric_chart.pad_left - 12 }}" y="{{ tick.y + 4 }}" text-anchor="end" class="chart-y-label">{{ tick.value }}</text>
+      {% endfor %}
+
+      <polyline points="{{ metric_chart.polyline }}" class="chart-line"></polyline>
+
+      {% for point in metric_chart.circles %}
+        <circle cx="{{ point.cx }}" cy="{{ point.cy }}" r="4.5" class="chart-point" data-label="{{ point.label }}" data-value="{{ point.value }}"></circle>
+      {% endfor %}
+
+      {% for x_label in metric_chart.x_labels %}
+        <text x="{{ x_label.x }}" y="{{ metric_chart.baseline + 24 }}" text-anchor="middle" class="chart-x-label">{{ x_label.label }}</text>
+      {% endfor %}
+    </svg>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const wrap = document.getElementById('insightsChartWrap');
+    const tooltip = document.getElementById('chartHoverTooltip');
+    if (!wrap || !tooltip) return;
+
+    const dateEl = tooltip.querySelector('.chart-hover-date');
+    const valueEl = tooltip.querySelector('.chart-hover-value');
+    const points = wrap.querySelectorAll('.chart-point');
+
+    function positionTooltip(event) {
+      const rect = wrap.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = Math.max(16, y - 14) + 'px';
+    }
+
+    points.forEach(function (point) {
+      point.addEventListener('mouseenter', function (event) {
+        dateEl.textContent = point.dataset.label || '';
+        valueEl.textContent = (point.dataset.value || '0') + ' {{ metric_label }}';
+        tooltip.classList.add('is-visible');
+        point.classList.add('is-hovered');
+        positionTooltip(event);
+      });
+
+      point.addEventListener('mousemove', function (event) {
+        positionTooltip(event);
+      });
+
+      point.addEventListener('mouseleave', function () {
+        tooltip.classList.remove('is-visible');
+        point.classList.remove('is-hovered');
+      });
+    });
+
+    wrap.addEventListener('mouseleave', function () {
+      tooltip.classList.remove('is-visible');
+      points.forEach(function (point) {
+        point.classList.remove('is-hovered');
+      });
+    });
+  });
+</script>
+{% endblock %}

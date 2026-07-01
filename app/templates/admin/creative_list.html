@@ -1,0 +1,64 @@
+{% extends 'admin/layout.html' %}
+{% block admin_title %}{{ cfg.title }}{% endblock %}
+{% block page_title %}{{ cfg.title }}{% endblock %}
+{% block page_subtitle %}{{ cfg.subtitle }}{% endblock %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+  <div class="d-flex gap-2 flex-wrap">
+    <a class="btn btn-outline-dark btn-sm" href="{{ url_for('admin.creative_list', kind='products') }}">Lojinha</a>
+    <a class="btn btn-outline-dark btn-sm" href="{{ url_for('admin.creative_list', kind='photos') }}">Fotos</a>
+    <a class="btn btn-outline-dark btn-sm" href="{{ url_for('admin.creative_list', kind='before-after') }}">Antes e Depois</a>
+    <a class="btn btn-outline-dark btn-sm" href="{{ url_for('admin.creative_list', kind='whatsapp-groups') }}">Grupos WhatsApp</a>
+    <a class="btn btn-outline-dark btn-sm" href="{{ url_for('admin.chat_messages') }}">Bate-papo</a>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-outline-secondary" target="_blank" rel="noopener" href="{{ url_for(cfg.public_endpoint) }}"><i class="bi bi-box-arrow-up-right me-1"></i>Ver página</a>
+    <a class="btn btn-dark" href="{{ url_for('admin.creative_new', kind=kind) }}"><i class="bi bi-plus-lg me-1"></i>Novo {{ cfg.singular }}</a>
+  </div>
+</div>
+
+<section class="panel-card">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th style="width:72px">#</th>
+          <th>Item</th>
+          <th>Status</th>
+          <th>Ordem</th>
+          <th class="text-end">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>
+              <div class="d-flex align-items-center gap-3">
+                {% set image_url = (item.image_url if item.image_url is defined else (item.before_image if item.before_image is defined else '')) %}
+                {% if image_url %}<img src="{{ image_url }}" alt="" style="width:70px;height:52px;object-fit:cover;border-radius:10px">{% endif %}
+                <div>
+                  <strong>{{ item|attr(cfg.display_attr) }}</strong>
+                  {% if item.description is defined and item.description %}<div class="text-muted small">{{ item.description|striptags|truncate(90) }}</div>{% endif %}
+                  {% if item.caption is defined and item.caption %}<div class="text-muted small">{{ item.caption|striptags|truncate(90) }}</div>{% endif %}
+                  {% if item.link_url is defined and item.link_url %}<div class="text-muted small">{{ item.link_url }}</div>{% endif %}
+                </div>
+              </div>
+            </td>
+            <td>{% if item.is_active %}<span class="badge text-bg-success">Ativo</span>{% else %}<span class="badge text-bg-secondary">Oculto</span>{% endif %}</td>
+            <td>{{ item.sort_order }}</td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-dark" href="{{ url_for('admin.creative_edit', kind=kind, item_id=item.id) }}">Editar</a>
+              <form method="post" action="{{ url_for('admin.creative_delete', kind=kind, item_id=item.id) }}" class="d-inline" onsubmit="return confirm('Excluir este item?')">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Excluir</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="text-center text-muted py-4">Nenhum item cadastrado ainda.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

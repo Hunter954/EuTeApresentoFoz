@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mv-page-head">
+  <span>Lojinha Nostálgica</span>
+  <h1>Produtos com alma da cidade</h1>
+  <p>Canecas, camisetas, pôsteres, chaveiros e lembranças para quem carrega Foz na memória.</p>
+</section>
+<div class="mv-product-page-grid">
+  {% for product in products %}
+    <article class="mv-product-page-card">
+      <div class="mv-product-img mv-product-img--large" {% if product.image_url %}style="background-image:url('{{ product.image_url }}')"{% endif %}></div>
+      <div>
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <strong>{{ product.price_label or 'Consulte' }}</strong>
+        <a href="{{ product.buy_url or '#' }}" {% if product.buy_url %}target="_blank" rel="noopener"{% endif %}>Comprar / saber mais</a>
+      </div>
+    </article>
+  {% else %}
+    <div class="mv-empty">Cadastre produtos pelo painel administrativo para alimentar a lojinha.</div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mv-page-head">
+  <span>Grupos WhatsApp</span>
+  <h1>Entre nos grupos da cidade</h1>
+  <p>Empregos, comércio local, eventos, esportes, classificados e memórias de Foz.</p>
+</section>
+<div class="mv-group-grid mv-group-grid--page">
+  {% for group in groups %}
+    <a class="mv-group-card" href="{{ group.link_url or '#' }}" {% if group.link_url %}target="_blank" rel="noopener"{% endif %}>
+      <span><i class="bi {{ group.icon_class or 'bi-people-fill' }}"></i></span>
+      <h2>{{ group.name }}</h2>
+      <p>{{ group.description }}</p>
+      <small>{{ group.member_count }}</small>
+      <strong>Entrar no grupo</strong>
+    </a>
+  {% else %}
+    <div class="mv-empty">Cadastre grupos no painel administrativo.</div>
+  {% endfor %}
+</div>
+{% endblock %}

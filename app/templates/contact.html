@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mv-page-head">
+  <span>Contato</span>
+  <h1>Fale com a equipe</h1>
+  <p>Envie pautas, histórias antigas, fotos da cidade, propostas comerciais ou dúvidas.</p>
+</section>
+<div class="mv-contact-grid">
+  <form action="{{ url_for('site.contact') }}" method="post" class="mv-contact-card">
+    <h2>Enviar mensagem</h2>
+    <input name="name" placeholder="Seu nome" required>
+    <input type="email" name="email" placeholder="Seu e-mail" required>
+    <input name="subject" placeholder="Assunto">
+    <textarea name="message" placeholder="Mensagem" rows="6" required></textarea>
+    <button type="submit">Enviar contato</button>
+  </form>
+  <aside class="mv-contact-card mv-contact-info">
+    <h2>Informações</h2>
+    {% if contact_phone %}<p><i class="bi bi-telephone-fill"></i> {{ contact_phone }}</p>{% endif %}
+    {% if contact_email %}<p><i class="bi bi-envelope-fill"></i> {{ contact_email }}</p>{% endif %}
+    {% if contact_address %}<p><i class="bi bi-geo-alt-fill"></i> {{ contact_address }}</p>{% endif %}
+    <hr>
+    <h3>Publicidade e parcerias</h3>
+    <p>Sua marca conectada com quem vive e ama Foz.</p>
+    <a href="{{ announcement_url or '#' }}">Anuncie aqui</a>
+  </aside>
+</div>
+{% endblock %}

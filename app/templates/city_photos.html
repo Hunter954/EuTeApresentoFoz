@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mv-page-head">
+  <span>Fotos da Cidade</span>
+  <h1>Imagens que contam Foz</h1>
+  <p>Paisagens, registros, ruas, praças e momentos para guardar a identidade da nossa cidade.</p>
+</section>
+<div class="mv-gallery-grid">
+  {% for photo in photos %}
+    <figure class="mv-gallery-card">
+      <div class="mv-photo mv-photo--large" {% if photo.image_url %}style="background-image:url('{{ photo.image_url }}')"{% endif %}></div>
+      <figcaption><strong>{{ photo.title }}</strong>{% if photo.caption %}<span>{{ photo.caption }}</span>{% endif %}</figcaption>
+    </figure>
+  {% else %}
+    <div class="mv-empty">Cadastre fotos pelo painel administrativo para montar a galeria.</div>
+  {% endfor %}
+</div>
+{% endblock %}

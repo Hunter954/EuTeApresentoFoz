@@ -1,0 +1,46 @@
+{% extends 'admin/layout.html' %}
+{% block admin_title %}{{ 'Novo' if mode == 'new' else 'Editar' }} {{ cfg.singular }}{% endblock %}
+{% block page_title %}{{ 'Novo' if mode == 'new' else 'Editar' }} {{ cfg.singular }}{% endblock %}
+{% block page_subtitle %}{{ cfg.subtitle }}{% endblock %}
+{% block admin_content %}
+<form method="post" enctype="multipart/form-data" class="panel-card">
+  <div class="row g-3">
+    {% for field in cfg.fields %}
+      <div class="col-md-{{ 12 if field.type == 'textarea' else 6 }}">
+        <label class="form-label">{{ field.label }}{% if field.required %} *{% endif %}</label>
+        {% set value = item|attr(field.name) if item|attr(field.name) is not none else '' %}
+        {% if field.type == 'textarea' %}
+          <textarea class="form-control" name="{{ field.name }}" rows="4" placeholder="{{ field.placeholder or '' }}">{{ value }}</textarea>
+        {% elif field.type == 'number' %}
+          <input class="form-control" type="number" name="{{ field.name }}" value="{{ value or 0 }}" placeholder="{{ field.placeholder or '' }}">
+        {% else %}
+          <input class="form-control" type="{{ field.type or 'text' }}" name="{{ field.name }}" value="{{ value }}" placeholder="{{ field.placeholder or '' }}">
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% for img in cfg.image_fields %}
+      <div class="col-md-6">
+        <label class="form-label">{{ img.label }} por link</label>
+        {% set current = item|attr(img.name) if item|attr(img.name) is not none else '' %}
+        <input class="form-control" name="{{ img.name }}" value="{{ current }}" placeholder="https://... ou /media/...">
+        <label class="form-label mt-2">Enviar arquivo</label>
+        <input class="form-control" type="file" name="{{ img.name }}_file" accept=".png,.jpg,.jpeg,.webp,.gif,.svg">
+        {% if current %}<img src="{{ current }}" alt="" class="mt-2" style="max-width:240px;max-height:140px;object-fit:cover;border-radius:12px">{% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="col-12">
+      <label class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" name="is_active" value="1" {% if item.is_active %}checked{% endif %}>
+        <span class="form-check-label">Exibir no site</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between mt-4">
+    <a class="btn btn-outline-secondary" href="{{ url_for('admin.creative_list', kind=kind) }}">Voltar</a>
+    <button class="btn btn-dark" type="submit">Salvar {{ cfg.singular }}</button>
+  </div>
+</form>
+{% endblock %}

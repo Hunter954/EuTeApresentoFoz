@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="mv-page-head">
+  <span>Bate-papo da Comunidade</span>
+  <h1>Converse sobre a cidade</h1>
+  <p>Compartilhe lembranças, avisos, perguntas e histórias com a comunidade.</p>
+</section>
+<div class="mv-chat-page">
+  <form action="{{ url_for('site.chat_page') }}" method="post" class="mv-chat-panel">
+    <h2>Enviar mensagem</h2>
+    <input name="name" placeholder="Seu nome" required maxlength="120">
+    <textarea name="message" placeholder="Escreva sua mensagem..." required maxlength="280" rows="4"></textarea>
+    <button type="submit">Publicar no bate-papo</button>
+  </form>
+  <section class="mv-chat-panel mv-chat-panel--list">
+    <h2>Mensagens recentes</h2>
+    {% for msg in chat_messages %}
+      <div class="mv-chat-item mv-chat-item--page"><span>{{ msg.name[:1] }}</span><div><strong>{{ msg.name }}</strong><small>{{ msg.created_at.strftime('%d/%m/%Y %H:%M') }}</small><p>{{ msg.message }}</p></div></div>
+    {% else %}
+      <p class="text-muted">Nenhuma mensagem publicada ainda.</p>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}
