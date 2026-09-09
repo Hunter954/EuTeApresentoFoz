@@ -4,183 +4,115 @@
   <div class="mv-img {{ class_name }}" {% if p and p.featured_image %}style="background-image:url('{{ p.featured_image }}')"{% endif %}></div>
 {%- endmacro %}
 
-<section class="mv-hero-grid">
+<section class="home-intro">
+  <div><span class="home-eyebrow">Jornalismo local</span><h1>Foz acontece aqui.</h1></div>
+  <p>Notícias, histórias e memórias para entender a cidade, todos os dias.</p>
+</section>
+
+<section class="mv-hero-grid" aria-label="Notícias em destaque">
   {% if lead_post %}
     <a class="mv-hero-card" href="{{ url_for('site.post', slug=lead_post.slug) }}">
       {{ post_image(lead_post, 'mv-hero-card__img') }}
       <div class="mv-hero-card__overlay">
-        <h1>{{ clean_text(lead_post.title, 92) }}</h1>
-        <p>{{ clean_text(lead_post.excerpt or lead_post.content_html, 125) }}</p>
-        <span class="mv-button">Ler matéria completa</span>
+        <span class="mv-hero-kicker">{{ lead_post.categories[0].name if lead_post.categories else 'Destaque' }}</span>
+        <h2>{{ clean_text(lead_post.title, 105) }}</h2>
+        <p>{{ clean_text(lead_post.excerpt or lead_post.content_html, 145) }}</p>
+        <small>{{ format_date_br(lead_post.published_at) }} <i class="bi bi-arrow-up-right"></i></small>
       </div>
     </a>
   {% else %}
     <div class="mv-hero-card mv-hero-card--empty">
       <div class="mv-img mv-hero-card__img"></div>
-      <div class="mv-hero-card__overlay"><h1>A cidade que mudou sem perder a alma</h1><p>Entre ruas e memórias, um povo que faz o presente acontecer todos os dias.</p><span class="mv-button">Cadastrar primeira matéria</span></div>
+      <div class="mv-hero-card__overlay"><span class="mv-hero-kicker">Nossa cidade</span><h2>A cidade que mudou sem perder a alma</h2><p>Entre ruas e memórias, um povo que faz o presente acontecer todos os dias.</p></div>
     </div>
   {% endif %}
 
   <div class="mv-hero-side">
     {% for p in top_posts %}
       <a class="mv-side-news" href="{{ url_for('site.post', slug=p.slug) }}">
-        <div class="mv-side-news__copy">
-          <span class="mv-tag">{{ p.categories[0].name if p.categories else 'Notícias' }}</span>
-          <h2>{{ clean_text(p.title, 70) }}</h2>
-          <small>{{ 'Saiba mais' if loop.index == 1 else 'Ver agenda' if loop.index == 3 else 'Ler história' }} <i class="bi bi-arrow-right"></i></small>
-        </div>
         {{ post_image(p, 'mv-side-news__img') }}
+        <div class="mv-side-news__copy"><span class="mv-tag">{{ p.categories[0].name if p.categories else 'Notícias' }}</span><h3>{{ clean_text(p.title, 82) }}</h3><small>{{ format_date_br(p.published_at) }} <i class="bi bi-arrow-right"></i></small></div>
       </a>
     {% else %}
-      {% for title in ['Nova orla será revitalizada e ganhará espaço cultural', 'Seu Antônio, 92 anos de lembranças e amor por nossa cidade', 'Festival de Inverno agita o fim de semana'] %}
-      <div class="mv-side-news">
-        <div class="mv-side-news__copy"><span class="mv-tag">{{ ['Notícias','Histórias','Agenda'][loop.index0] }}</span><h2>{{ title }}</h2><small>Saiba mais <i class="bi bi-arrow-right"></i></small></div>
-        <div class="mv-img mv-side-news__img"></div>
-      </div>
+      {% for title in ['Nova orla será revitalizada e ganhará espaço cultural', 'Seu Antônio, 92 anos de lembranças e amor por nossa cidade', 'Festival movimenta o fim de semana em Foz'] %}
+        <article class="mv-side-news"><div class="mv-img mv-side-news__img"></div><div class="mv-side-news__copy"><span class="mv-tag">{{ ['Cidade','Histórias','Agenda'][loop.index0] }}</span><h3>{{ title }}</h3><small>Confira <i class="bi bi-arrow-right"></i></small></div></article>
       {% endfor %}
     {% endfor %}
   </div>
 </section>
 
-<section class="mv-ad-band">
-  <span>Publicidade</span>
-  {% if ad_home_middle %}<div class="ad-box">{{ ad_home_middle|safe }}</div>{% else %}<div class="mv-ad-placeholder"><strong>Anuncie aqui</strong><small>para milhares de pessoas da nossa cidade.</small></div>{% endif %}
-</section>
+{% if ad_home_middle %}<section class="mv-ad-band"><span>Publicidade</span><div class="ad-box">{{ ad_home_middle|safe }}</div></section>{% endif %}
 
 <div class="mv-layout-with-rail">
   <div class="mv-layout-main">
-    <section class="mv-section">
-      <div class="mv-section-head"><h2>Últimas Notícias</h2></div>
+    <section class="mv-section mv-section--first">
+      <div class="mv-section-head mv-section-head--link"><div><span>Agora em Foz</span><h2>Últimas notícias</h2></div><a href="{{ url_for('site.news_page') }}">Ver todas <i class="bi bi-arrow-right"></i></a></div>
       <div class="mv-news-grid">
         {% for p in latest_cards %}
-          <a class="mv-news-card" href="{{ url_for('site.post', slug=p.slug) }}">
-            {{ post_image(p, 'mv-news-card__img') }}
-            <div class="mv-news-card__body">
-              <span class="mv-tag mv-tag--mini">{{ p.categories[0].name if p.categories else 'Notícias' }}</span>
-              <h3>{{ clean_text(p.title, 75) }}</h3>
-              <p>{{ clean_text(p.excerpt or p.content_html, 94) }}</p>
-              <small>{{ format_date_br(p.published_at) }} • 2 min de leitura</small>
-            </div>
-          </a>
+          <a class="mv-news-card" href="{{ url_for('site.post', slug=p.slug) }}">{{ post_image(p, 'mv-news-card__img') }}<div class="mv-news-card__body"><span class="mv-tag mv-tag--mini">{{ p.categories[0].name if p.categories else 'Notícias' }}</span><h3>{{ clean_text(p.title, 88) }}</h3><p>{{ clean_text(p.excerpt or p.content_html, 120) }}</p><small>{{ format_date_br(p.published_at) }} • Leitura rápida</small></div></a>
         {% else %}
-          {% for title in ['Prefeitura anuncia novo programa de arborização', 'Escola municipal é referência em projeto sustentável', 'Mutirão de exames beneficia moradores do bairro', 'Guarda Municipal recebe novos equipamentos', 'Biblioteca pública completa 60 anos'] %}
-          <article class="mv-news-card">
-            <div class="mv-img mv-news-card__img"></div>
-            <div class="mv-news-card__body"><span class="mv-tag mv-tag--mini">Cidade</span><h3>{{ title }}</h3><p>Conteúdo demonstrativo. Cadastre matérias pelo painel para alimentar esta área.</p><small>Hoje • 2 min de leitura</small></div>
-          </article>
+          {% for title in ['Prefeitura anuncia novo programa de arborização', 'Escola municipal é referência em projeto sustentável', 'Mutirão de exames beneficia moradores do bairro', 'Guarda Municipal recebe novos equipamentos'] %}
+            <article class="mv-news-card"><div class="mv-img mv-news-card__img"></div><div class="mv-news-card__body"><span class="mv-tag mv-tag--mini">Cidade</span><h3>{{ title }}</h3><p>Informação local, clara e direta para acompanhar tudo o que acontece em Foz.</p><small>Hoje • Leitura rápida</small></div></article>
           {% endfor %}
         {% endfor %}
       </div>
     </section>
 
-    <section class="mv-section">
-      <div class="mv-section-head"><h2>Matérias & Histórias</h2></div>
+    <section class="mv-section mv-editorial-section">
+      <div class="mv-section-head mv-section-head--link"><div><span>Gente, lugares e identidade</span><h2>Matérias & Histórias</h2></div><a href="{{ url_for('site.stories_page') }}">Explorar <i class="bi bi-arrow-right"></i></a></div>
       <div class="mv-feature-grid">
         {% set combined_posts = (story_posts + history_posts)[:3] %}
         {% for p in combined_posts %}
-          <a class="mv-feature-card" href="{{ url_for('site.post', slug=p.slug) }}">
-            {{ post_image(p, 'mv-feature-card__img') }}
-            <div class="mv-feature-card__copy">
-              <span class="mv-tag">{{ p.categories[0].name if p.categories else 'Matéria Local' }}</span>
-              <h3>{{ clean_text(p.title, 78) }}</h3>
-              <p>{{ clean_text(p.excerpt or p.content_html, 105) }}</p>
-              <small>4 min de leitura</small>
-            </div>
-          </a>
+          <a class="mv-feature-card" href="{{ url_for('site.post', slug=p.slug) }}">{{ post_image(p, 'mv-feature-card__img') }}<div class="mv-feature-card__copy"><span class="mv-tag">{{ p.categories[0].name if p.categories else 'Especial' }}</span><h3>{{ clean_text(p.title, 88) }}</h3><p>{{ clean_text(p.excerpt or p.content_html, 115) }}</p></div></a>
         {% else %}
           {% for title in ['Do trem à inovação: a evolução que vem dos nossos trilhos', 'Dona Irene e o sabor que atravessa gerações', 'Lugares que moram no coração da gente'] %}
-          <article class="mv-feature-card">
-            <div class="mv-img mv-feature-card__img"></div>
-            <div class="mv-feature-card__copy"><span class="mv-tag">Matéria Local</span><h3>{{ title }}</h3><p>Relatos, sabores e memórias para construir uma cidade mais viva.</p><small>4 min de leitura</small></div>
-          </article>
+            <article class="mv-feature-card"><div class="mv-img mv-feature-card__img"></div><div class="mv-feature-card__copy"><span class="mv-tag">Especial</span><h3>{{ title }}</h3><p>Relatos, sabores e memórias que constroem nossa cidade.</p></div></article>
           {% endfor %}
         {% endfor %}
       </div>
     </section>
 
     <section class="mv-section">
-      <div class="mv-section-head mv-section-head--link"><h2>Antes e Depois</h2><a href="{{ url_for('site.before_after_page') }}">Ver todas as comparações <i class="bi bi-arrow-right"></i></a></div>
+      <div class="mv-section-head mv-section-head--link"><div><span>Memória visual</span><h2>Antes e Depois</h2></div><a href="{{ url_for('site.before_after_page') }}">Ver comparações <i class="bi bi-arrow-right"></i></a></div>
       <div class="mv-before-grid">
         {% for item in before_after_items %}
-          <article class="mv-before-card" data-before-after>
-            <div class="mv-before-card__images">
-              <div class="mv-before-img mv-before-img--before" {% if item.before_image %}style="background-image:url('{{ item.before_image }}')"{% endif %}></div>
-              <div class="mv-before-img mv-before-img--after" {% if item.after_image %}style="background-image:url('{{ item.after_image }}')"{% endif %}></div>
-              <span class="mv-before-divider"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i></span>
-            </div>
-            <h3>{{ item.title }}: {{ item.year_before or 'Antes' }} x {{ item.year_after or 'Hoje' }}</h3>
-          </article>
+          <article class="mv-before-card" data-before-after><div class="mv-before-card__images"><div class="mv-before-img mv-before-img--before" {% if item.before_image %}style="background-image:url('{{ item.before_image }}')"{% endif %}></div><div class="mv-before-img mv-before-img--after" {% if item.after_image %}style="background-image:url('{{ item.after_image }}')"{% endif %}></div><span class="mv-before-divider"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i></span></div><div class="mv-before-card__copy"><small>{{ item.location or 'Foz do Iguaçu' }}</small><h3>{{ item.title }}: {{ item.year_before or 'Antes' }} × {{ item.year_after or 'Hoje' }}</h3></div></article>
         {% else %}
-          <article class="mv-before-card"><div class="mv-before-card__images"><div class="mv-before-img mv-before-img--before"></div><div class="mv-before-img mv-before-img--after"></div><span class="mv-before-divider"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i></span></div><h3>Praça Central: 1988 x Hoje</h3></article>
+          <article class="mv-before-card"><div class="mv-before-card__images"><div class="mv-before-img mv-before-img--before"></div><div class="mv-before-img mv-before-img--after"></div><span class="mv-before-divider"><i class="bi bi-chevron-left"></i><i class="bi bi-chevron-right"></i></span></div><div class="mv-before-card__copy"><small>Centro</small><h3>Praça Central: 1988 × Hoje</h3></div></article>
         {% endfor %}
       </div>
     </section>
 
-    <section class="mv-section">
-      <div class="mv-section-head mv-section-head--link"><h2>Lojinha Nostálgica</h2><a href="{{ url_for('site.products_page') }}">Ver todos os produtos <i class="bi bi-arrow-right"></i></a></div>
-      <div class="mv-product-row">
-        {% for product in products %}
-          <a class="mv-product-card" href="{{ product.buy_url or url_for('site.products_page') }}" {% if product.buy_url %}target="_blank" rel="noopener"{% endif %}>
-            <div class="mv-product-img" {% if product.image_url %}style="background-image:url('{{ product.image_url }}')"{% endif %}></div>
-            <h3>{{ product.name }}</h3>
-            <strong>{{ product.price_label or 'Consulte' }}</strong>
-          </a>
-        {% else %}
-          <div class="mv-product-card"><div class="mv-product-img"></div><h3>Caneca da Cidade</h3><strong>R$ 34,90</strong></div>
-        {% endfor %}
-      </div>
-    </section>
-
-    <section class="mv-section">
-      <div class="mv-section-head mv-section-head--link"><h2>Grupos da Cidade no WhatsApp</h2><a href="{{ url_for('site.whatsapp_groups_page') }}">Ver todos os grupos <i class="bi bi-arrow-right"></i></a></div>
-      <div class="mv-group-grid">
-        {% for group in whatsapp_groups %}
-          <a class="mv-group-card" href="{{ group.link_url or '#' }}" {% if group.link_url %}target="_blank" rel="noopener"{% endif %}>
-            <span><i class="bi {{ group.icon_class or 'bi-people-fill' }}"></i></span>
-            <h3>{{ group.name }}</h3>
-            <p>{{ group.description }}</p>
-            <small>{{ group.member_count }}</small>
-            <strong>Entrar no grupo</strong>
-          </a>
-        {% endfor %}
-      </div>
-    </section>
-
-    <section class="mv-section">
-      <div class="mv-section-head mv-section-head--link"><h2>Fotos da Cidade</h2><a href="{{ url_for('site.city_photos_page') }}">Ver mais fotos <i class="bi bi-arrow-right"></i></a></div>
+    <section class="mv-section mv-city-section">
+      <div class="mv-section-head mv-section-head--link"><div><span>Olhares sobre a cidade</span><h2>Foz em imagens</h2></div><a href="{{ url_for('site.city_photos_page') }}">Abrir galeria <i class="bi bi-arrow-right"></i></a></div>
       <div class="mv-photo-strip">
-        {% for photo in city_photos %}
-          <div class="mv-photo" {% if photo.image_url %}style="background-image:url('{{ photo.image_url }}')"{% endif %}><span>{{ photo.title }}</span></div>
-        {% else %}
-          {% for name in ['Catedral', 'Rio Paraná', 'Cidade aérea', 'Noite no centro'] %}<div class="mv-photo"><span>{{ name }}</span></div>{% endfor %}
-        {% endfor %}
+        {% for photo in city_photos %}<a class="mv-photo" href="{{ url_for('site.city_photos_page') }}" {% if photo.image_url %}style="background-image:url('{{ photo.image_url }}')"{% endif %}><span><small>Foz do Iguaçu</small>{{ photo.title }}</span></a>
+        {% else %}{% for name in ['Cataratas do Iguaçu', 'Rio Paraná', 'A cidade vista de cima', 'Noite no centro'] %}<a class="mv-photo" href="{{ url_for('site.city_photos_page') }}"><span><small>Foz do Iguaçu</small>{{ name }}</span></a>{% endfor %}{% endfor %}
       </div>
     </section>
   </div>
 
   <aside class="mv-rail">
-    <div class="mv-rail-ad">
-      <span>Publicidade</span>
-      {% if ad_sidebar_1 %}<div class="ad-box">{{ ad_sidebar_1|safe }}</div>{% else %}<div class="mv-ad-square mv-ad-square--dark"><strong>Sua marca presente no dia a dia da nossa cidade.</strong><em>Anuncie aqui</em></div>{% endif %}
-    </div>
-    <div class="mv-rail-ad">
-      <span>Publicidade</span>
-      {% if ad_sidebar_2 %}<div class="ad-box">{{ ad_sidebar_2|safe }}</div>{% else %}<div class="mv-ad-square mv-ad-square--paper"><strong>Apoie o que é da nossa terra.</strong><small>Compre na lojinha nostálgica!</small></div>{% endif %}
-    </div>
+    <section class="mv-quick-panel">
+      <span class="mv-rail-label">Explore a cidade</span><h2>Mais que notícia</h2>
+      <a class="mv-quick-card mv-quick-card--whatsapp" href="{{ url_for('site.whatsapp_groups_page') }}"><i class="bi bi-whatsapp"></i><div><strong>Grupos de WhatsApp</strong><small>Empregos, eventos e comunidade</small></div><i class="bi bi-arrow-up-right"></i></a>
+      <a class="mv-quick-card mv-quick-card--shop" href="{{ url_for('site.products_page') }}"><i class="bi bi-bag-heart"></i><div><strong>Lojinha Nostálgica</strong><small>Produtos com a cara de Foz</small></div><i class="bi bi-arrow-up-right"></i></a>
+      <a class="mv-quick-card" href="{{ url_for('site.city_photos_page') }}"><i class="bi bi-images"></i><div><strong>Fotos da cidade</strong><small>Registros e paisagens</small></div><i class="bi bi-arrow-up-right"></i></a>
+    </section>
+
+    {% if ad_sidebar_1 %}<div class="mv-rail-ad"><span>Publicidade</span><div class="ad-box">{{ ad_sidebar_1|safe }}</div></div>{% endif %}
 
     <section class="mv-chat-widget">
-      <div class="mv-section-head"><h2>Bate-papo da Comunidade</h2></div>
-      <div class="mv-chat-list">
-        {% for msg in chat_messages %}
-          <div class="mv-chat-item"><span>{{ msg.name[:1] }}</span><div><strong>{{ msg.name }}</strong><p>{{ msg.message }}</p></div></div>
-        {% endfor %}
-      </div>
-      <form action="{{ url_for('site.chat_page') }}" method="post" class="mv-chat-form">
-        <input name="name" placeholder="Seu nome" required>
-        <input name="message" placeholder="Escreva sua mensagem..." required>
-        <button type="submit"><i class="bi bi-send-fill"></i></button>
-      </form>
+      <div class="mv-chat-widget__head"><span>Comunidade</span><h2>Bate-papo de Foz</h2></div>
+      <div class="mv-chat-list">{% for msg in chat_messages[:3] %}<div class="mv-chat-item"><span>{{ msg.name[:1] }}</span><div><strong>{{ msg.name }}</strong><p>{{ msg.message }}</p></div></div>{% else %}<p class="mv-chat-empty">Seja o primeiro a conversar com a cidade.</p>{% endfor %}</div>
+      <a class="mv-chat-link" href="{{ url_for('site.chat_page') }}">Participar do bate-papo <i class="bi bi-arrow-right"></i></a>
     </section>
+
+    {% if ad_sidebar_2 %}<div class="mv-rail-ad"><span>Publicidade</span><div class="ad-box">{{ ad_sidebar_2|safe }}</div></div>{% endif %}
   </aside>
 </div>
+
+{% if ad_home_bottom %}<section class="mv-ad-band mv-ad-band--bottom"><span>Publicidade</span><div class="ad-box">{{ ad_home_bottom|safe }}</div></section>{% endif %}
+
+<section class="mv-home-newsletter"><div><span>Direto no seu e-mail</span><h2>Comece o dia sabendo o que acontece em Foz.</h2></div><form action="#" method="post"><input type="email" placeholder="Seu melhor e-mail" aria-label="Seu e-mail"><button type="submit">Quero receber</button></form></section>
 {% endblock %}
