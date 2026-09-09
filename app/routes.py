@@ -186,9 +186,7 @@ def _fixed_nav_pages():
         {"label": "Histórias", "endpoint": "site.history_page"},
         {"label": "Fotos da Cidade", "endpoint": "site.city_photos_page"},
         {"label": "Antes e Depois", "endpoint": "site.before_after_page"},
-        {"label": "Lojinha", "endpoint": "site.products_page"},
         {"label": "Bate-papo", "endpoint": "site.chat_page"},
-        {"label": "Grupos WhatsApp", "endpoint": "site.whatsapp_groups_page"},
         {"label": "Contato", "endpoint": "site.contact"},
     ]
 
