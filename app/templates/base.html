@@ -58,8 +58,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700;6..72,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
   {% if google_analytics_id %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}"></script>
   <script>
@@ -75,7 +76,8 @@
     <div class="mv-topbar">
       <div class="container-xl mv-topbar__inner">
         <div class="mv-topbar__left">
-          <span><i class="bi bi-calendar3"></i> {{ topbar_date_label }}</span>
+          <span><i class="bi bi-geo-alt-fill"></i> Foz do Iguaçu, Paraná</span>
+          <span class="mv-topbar__date"><i class="bi bi-calendar3"></i> {{ topbar_date_label }}</span>
           <span><i class="bi bi-cloud-sun-fill"></i> {{ weather_text }}</span>
         </div>
         <div class="mv-topbar__right">
@@ -101,12 +103,16 @@
         <input type="search" name="q" placeholder="Buscar no site..." value="{{ request.args.get('q', '') }}" aria-label="Buscar">
         <button type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
       </form>
+      <div class="mv-header-quicklinks" aria-label="Acessos rápidos">
+        <a href="{{ url_for('site.whatsapp_groups_page') }}"><i class="bi bi-whatsapp"></i><span>Grupos</span></a>
+        <a href="{{ url_for('site.products_page') }}"><i class="bi bi-bag-heart"></i><span>Lojinha</span></a>
+      </div>
       <button class="mv-menu-btn" type="button" aria-label="Abrir menu" data-menu-toggle><i class="bi bi-list"></i></button>
     </div>
 
     <nav class="mv-nav" data-menu-panel>
       <div class="container-xl mv-nav__inner">
-        <a class="mv-home-link" href="{{ url_for('site.home') }}"><i class="bi bi-house-fill"></i></a>
+        <a class="mv-home-link" href="{{ url_for('site.home') }}"><i class="bi bi-house-fill"></i><span>Início</span></a>
         {% for item in nav_pages %}
           <a href="{{ url_for(item.endpoint) }}">{{ item.label }}</a>
         {% endfor %}
