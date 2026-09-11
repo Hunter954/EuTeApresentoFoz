@@ -1,4 +1,28 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const themeToggle = document.querySelector('.theme-toggle');
+  const root = document.documentElement;
+
+  const updateThemeToggle = () => {
+    if (!themeToggle) return;
+    const isDark = root.dataset.theme === 'dark';
+    const icon = themeToggle.querySelector('i');
+    const label = themeToggle.querySelector('span');
+    const actionLabel = isDark ? 'Ativar tema claro' : 'Ativar tema escuro';
+
+    themeToggle.setAttribute('aria-label', actionLabel);
+    themeToggle.setAttribute('title', actionLabel);
+    if (icon) icon.className = isDark ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+    if (label) label.textContent = isDark ? 'Tema claro' : 'Tema escuro';
+  };
+
+  updateThemeToggle();
+  themeToggle?.addEventListener('click', () => {
+    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = nextTheme;
+    try { localStorage.setItem('eu-te-apresento-foz-theme', nextTheme); } catch (error) {}
+    updateThemeToggle();
+  });
+
   const menuToggle = document.querySelector('[data-menu-toggle]');
   const menuPanel = document.querySelector('[data-menu-panel]');
   menuToggle?.addEventListener('click', () => {

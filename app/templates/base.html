@@ -26,6 +26,19 @@
   {% if meta_image %}<meta name="twitter:image" content="{{ meta_image }}">{% endif %}
   {% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
 
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem('eu-te-apresento-foz-theme');
+        if (theme === 'dark' || theme === 'light') {
+          document.documentElement.dataset.theme = theme;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      } catch (error) {}
+    })();
+  </script>
+
   <script type="application/ld+json">
     {{ {
       "@context": "https://schema.org",
@@ -81,6 +94,9 @@
           <span><i class="bi bi-cloud-sun-fill"></i> {{ weather_text }}</span>
         </div>
         <div class="mv-topbar__right">
+          <button class="theme-toggle" type="button" aria-label="Ativar tema escuro" title="Mudar tema">
+            <i class="bi bi-moon-stars-fill" aria-hidden="true"></i><span>Tema escuro</span>
+          </button>
           {% if social_links.facebook %}<a href="{{ social_links.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
           {% if social_links.instagram %}<a href="{{ social_links.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
           {% if social_links.youtube %}<a href="{{ social_links.youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><i class="bi bi-youtube"></i></a>{% endif %}

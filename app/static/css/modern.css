@@ -263,6 +263,141 @@ a:hover{color:var(--blue)}
   .mv-footer__grid{grid-template-columns:1fr}
 }
 
+/* Tema claro e escuro */
+:root{
+  color-scheme:light;
+  --field:#fff;
+  --surface:#fff;
+  --surface-soft:#f4f6f5;
+  --placeholder:#7b8789;
+}
+
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#eef4f3;
+  --ink-2:#c6d1cf;
+  --muted:#a8b5b3;
+  --paper:#0d1416;
+  --paper-2:#182124;
+  --card:#151e21;
+  --line:#2d3a3d;
+  --gold-dark:#f0c35a;
+  --green:#55c88a;
+  --shadow:0 14px 40px rgba(0,0,0,.3);
+  --field:#172226;
+  --surface:#121b1e;
+  --surface-soft:#1a2528;
+  --placeholder:#82908e;
+}
+
+html,
+body,
+.mv-header,
+.mv-brand-row,
+.mv-nav,
+.mv-search,
+.mv-search button,
+.mv-side-news,
+.mv-before-card,
+.mv-chat-widget,
+.mv-rail-ad,
+.mv-page-head,
+.mv-product-page-card,
+.mv-group-card,
+.mv-gallery-card,
+.mv-contact-card,
+.mv-chat-panel,
+.article,
+.recent-card,
+.side-story-card,
+.news-tile-card,
+.mv-home-newsletter,
+.mv-quick-panel{
+  transition:background-color .22s ease,color .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+
+body{background:var(--paper)}
+.mv-header,.mv-brand-row,.mv-nav{background:var(--surface)}
+.mv-search,.mv-search button,.mv-search input,
+.mv-newsletter input,.mv-chat-form input,
+.mv-chat-panel input,.mv-chat-panel textarea,
+.mv-contact-card input,.mv-contact-card textarea{
+  background:var(--field);
+  color:var(--ink);
+}
+.mv-search input::placeholder,.mv-newsletter input::placeholder,
+.mv-chat-form input::placeholder,.mv-chat-panel input::placeholder,
+.mv-chat-panel textarea::placeholder,.mv-contact-card input::placeholder,
+.mv-contact-card textarea::placeholder{color:var(--placeholder)}
+
+.theme-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border:0;
+  background:transparent;
+  color:#fff;
+  font:inherit;
+  cursor:pointer;
+  padding:0;
+  white-space:nowrap;
+}
+.theme-toggle:hover{color:#9dd7c8}
+.theme-toggle i{font-size:12px}
+
+:root[data-theme="dark"] .mv-nav a,
+:root[data-theme="dark"] .mv-home-link,
+:root[data-theme="dark"] .mv-brand__text strong,
+:root[data-theme="dark"] .mv-side-news h3,
+:root[data-theme="dark"] .mv-before-card h3,
+:root[data-theme="dark"] .mv-before-card h2,
+:root[data-theme="dark"] .mv-news-card h3,
+:root[data-theme="dark"] .mv-quick-card strong,
+:root[data-theme="dark"] .mv-page-head h1,
+:root[data-theme="dark"] .article-title,
+:root[data-theme="dark"] .article-content,
+:root[data-theme="dark"] .recent-title,
+:root[data-theme="dark"] .news-tile-card h3,
+:root[data-theme="dark"] .side-story-card h3{color:var(--ink)}
+
+:root[data-theme="dark"] .mv-side-news,
+:root[data-theme="dark"] .mv-before-card,
+:root[data-theme="dark"] .mv-chat-widget,
+:root[data-theme="dark"] .mv-page-head,
+:root[data-theme="dark"] .mv-product-page-card,
+:root[data-theme="dark"] .mv-group-card,
+:root[data-theme="dark"] .mv-gallery-card,
+:root[data-theme="dark"] .mv-contact-card,
+:root[data-theme="dark"] .mv-chat-panel,
+:root[data-theme="dark"] .article,
+:root[data-theme="dark"] .recent-card,
+:root[data-theme="dark"] .side-story-card,
+:root[data-theme="dark"] .news-tile-card{background:var(--card)}
+
+:root[data-theme="dark"] .mv-quick-panel,
+:root[data-theme="dark"] .mv-home-newsletter{background:var(--surface-soft)}
+:root[data-theme="dark"] .mv-quick-card{border-color:var(--line)}
+:root[data-theme="dark"] .mv-quick-card>i:first-child{background:var(--field);color:var(--gold-dark)}
+:root[data-theme="dark"] .mv-tag,
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .mv-section-head a,
+:root[data-theme="dark"] .mv-page-head span,
+:root[data-theme="dark"] .mv-home-newsletter span,
+:root[data-theme="dark"] .mv-rail-label,
+:root[data-theme="dark"] .mv-chat-widget__head>span{color:var(--gold-dark)}
+:root[data-theme="dark"] .mv-ad-band{background:var(--surface-soft)}
+:root[data-theme="dark"] .mv-empty{background:var(--card);border-color:var(--line);color:var(--muted)}
+:root[data-theme="dark"] .pagination .page-link{background:var(--card);border-color:var(--line);color:var(--ink)}
+:root[data-theme="dark"] .alert{background:var(--card);border-color:var(--line);color:var(--ink)}
+:root[data-theme="dark"] .mv-brand img{filter:brightness(0) invert(1)}
+
+@media(max-width:767px){
+  .mv-topbar__right{display:flex;margin-left:auto}
+  .mv-topbar__right>a{display:none!important}
+  .theme-toggle span{display:none}
+  .theme-toggle i{font-size:14px}
+}
+
 @media(max-width:390px){
   .mv-header-quicklinks{gap:4px}
   .mv-header-quicklinks a{width:34px;height:34px;min-height:34px}
