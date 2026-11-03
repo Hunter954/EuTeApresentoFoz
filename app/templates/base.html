@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#a13e09">
   <title>{{ meta_title or site_name_value }}</title>
   <meta name="description" content="{{ meta_description or '' }}">
   {% if meta_keywords %}<meta name="keywords" content="{{ meta_keywords }}">{% endif %}
@@ -100,8 +101,7 @@
           {% if social_links.facebook %}<a href="{{ social_links.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
           {% if social_links.instagram %}<a href="{{ social_links.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
           {% if social_links.youtube %}<a href="{{ social_links.youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><i class="bi bi-youtube"></i></a>{% endif %}
-          <a href="https://wa.me/" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-          <a class="mv-ad-btn" href="{{ announcement_url or '#' }}">Anuncie aqui</a>
+          {% if announcement_url %}<a class="mv-ad-btn" href="{{ announcement_url }}">Anuncie aqui</a>{% endif %}
         </div>
       </div>
     </div>
@@ -123,14 +123,14 @@
         <a href="{{ url_for('site.whatsapp_groups_page') }}"><i class="bi bi-whatsapp"></i><span>Grupos</span></a>
         <a href="{{ url_for('site.products_page') }}"><i class="bi bi-bag-heart"></i><span>Lojinha</span></a>
       </div>
-      <button class="mv-menu-btn" type="button" aria-label="Abrir menu" data-menu-toggle><i class="bi bi-list"></i></button>
+      <button class="mv-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle><i class="bi bi-list"></i></button>
     </div>
 
     <nav class="mv-nav" data-menu-panel>
       <div class="container-xl mv-nav__inner">
-        <a class="mv-home-link" href="{{ url_for('site.home') }}"><i class="bi bi-house-fill"></i><span>Início</span></a>
+        <a class="mv-home-link" href="{{ url_for('site.home') }}" {% if request.endpoint == 'site.home' %}aria-current="page"{% endif %}><i class="bi bi-house-fill"></i><span>Início</span></a>
         {% for item in nav_pages %}
-          <a href="{{ url_for(item.endpoint) }}">{{ item.label }}</a>
+          <a href="{{ url_for(item.endpoint) }}" {% if request.endpoint == item.endpoint %}aria-current="page"{% endif %}>{{ item.label }}</a>
         {% endfor %}
       </div>
     </nav>
@@ -165,7 +165,6 @@
           {% if social_links.facebook %}<a href="{{ social_links.facebook }}" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>{% endif %}
           {% if social_links.instagram %}<a href="{{ social_links.instagram }}" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% endif %}
           {% if social_links.youtube %}<a href="{{ social_links.youtube }}" target="_blank" rel="noopener"><i class="bi bi-youtube"></i></a>{% endif %}
-          <a href="https://wa.me/" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i></a>
         </div>
       </div>
       <div>
@@ -175,18 +174,15 @@
         </div>
       </div>
       <div>
-        <h3>Newsletter</h3>
-        <p>Receba novidades e histórias da nossa cidade no seu e-mail.</p>
-        <form class="mv-newsletter" action="#" method="post">
-          <input type="email" placeholder="Seu melhor e-mail">
-          <button type="submit">Quero receber</button>
-        </form>
+        <h3>Explore Foz</h3>
+        <p>Acompanhe as notícias, conheça histórias e descubra novos olhares sobre a cidade.</p>
+        <a class="mv-footer__explore" href="{{ url_for('site.news_page') }}">Ver notícias <i class="bi bi-arrow-right"></i></a>
       </div>
       <div>
         <h3>Contato</h3>
         {% if organization_schema.telephone %}<p><i class="bi bi-telephone-fill"></i> {{ organization_schema.telephone }}</p>{% endif %}
         {% if organization_schema.email %}<p><i class="bi bi-envelope-fill"></i> {{ organization_schema.email }}</p>{% endif %}
-        <a class="mv-ad-btn mv-ad-btn--footer" href="{{ announcement_url or '#' }}">Anuncie aqui</a>
+        {% if announcement_url %}<a class="mv-ad-btn mv-ad-btn--footer" href="{{ announcement_url }}">Anuncie aqui</a>{% endif %}
       </div>
     </div>
     <div class="mv-footer__bottom">

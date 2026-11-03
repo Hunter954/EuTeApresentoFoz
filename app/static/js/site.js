@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuToggle = document.querySelector('[data-menu-toggle]');
   const menuPanel = document.querySelector('[data-menu-panel]');
   menuToggle?.addEventListener('click', () => {
-    menuPanel?.classList.toggle('is-open');
+    const isOpen = menuPanel?.classList.toggle('is-open');
+    menuToggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
+    menuToggle.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
   });
 
   document.querySelectorAll('[data-before-after]').forEach((card) => {

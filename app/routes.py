@@ -506,6 +506,10 @@ def home():
     top_posts = latest[1:4] if len(latest) > 1 else []
     excluded = {p.id for p in [lead_post, *top_posts] if p}
     _, latest_cards = _posts_for_categories(["noticias", "cidade", "foz"], 6, excluded)
+    if not latest_cards:
+        # A página inicial deve continuar mostrando publicações reais quando
+        # as poucas matérias disponíveis já aparecem no destaque principal.
+        latest_cards = latest[1:7]
     excluded.update(p.id for p in latest_cards)
     _, story_posts = _posts_for_categories(["materias", "matérias", "materia"], 3, excluded)
     excluded.update(p.id for p in story_posts)
@@ -517,7 +521,7 @@ def home():
         latest=latest,
         lead_post=lead_post,
         top_posts=top_posts,
-        latest_cards=latest_cards[:5],
+        latest_cards=latest_cards[:6],
         story_posts=story_posts[:3],
         history_posts=history_posts[:3],
         before_after_items=_active_before_after(3),
