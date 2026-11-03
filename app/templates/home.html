@@ -43,7 +43,7 @@
       <div class="mv-section-head mv-section-head--link"><div><span>Agora em Foz</span><h2>Mais recentes</h2></div><a href="{{ url_for('site.news_page') }}">Ver notícias <i class="bi bi-arrow-right"></i></a></div>
       <div class="mv-news-grid">
         {% for p in latest_cards %}
-          <a class="mv-news-card" href="{{ url_for('site.post', slug=p.slug) }}">{{ post_image(p, 'mv-news-card__img') }}<div class="mv-news-card__body"><span class="mv-tag mv-tag--mini">{{ p.categories[0].name if p.categories else 'Notícias' }}</span><h3>{{ clean_text(p.title, 88) }}</h3><p>{{ clean_text(p.excerpt or p.content_html, 120) }}</p><small>{{ format_date_br(p.published_at) }} • Leitura rápida</small></div></a>
+          <a class="mv-news-card" href="{{ url_for('site.post', slug=p.slug) }}">{{ post_image(p, 'mv-news-card__img') }}<div class="mv-news-card__body"><span class="mv-tag mv-tag--mini">{{ p.categories[0].name if p.categories else 'Notícias' }}</span><h3>{{ clean_text(p.title, 88) }}</h3><p>{{ clean_text(p.excerpt or p.content_html, 120) }}</p><small>{{ format_date_br(p.published_at) }}</small></div></a>
         {% endfor %}
       </div>
     </section>

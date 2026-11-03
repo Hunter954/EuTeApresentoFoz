@@ -74,7 +74,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,600;6..72,700;6..72,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modern.css', v='20261103-orange') }}">
   {% if google_analytics_id %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_id }}"></script>
   <script>
@@ -101,7 +101,7 @@
           {% if social_links.facebook %}<a href="{{ social_links.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
           {% if social_links.instagram %}<a href="{{ social_links.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
           {% if social_links.youtube %}<a href="{{ social_links.youtube }}" target="_blank" rel="noopener" aria-label="YouTube"><i class="bi bi-youtube"></i></a>{% endif %}
-          {% if announcement_url %}<a class="mv-ad-btn" href="{{ announcement_url }}">Anuncie aqui</a>{% endif %}
+          {% if announcement_url and announcement_url != '#' %}<a class="mv-ad-btn" href="{{ announcement_url }}">Anuncie aqui</a>{% endif %}
         </div>
       </div>
     </div>
@@ -182,7 +182,7 @@
         <h3>Contato</h3>
         {% if organization_schema.telephone %}<p><i class="bi bi-telephone-fill"></i> {{ organization_schema.telephone }}</p>{% endif %}
         {% if organization_schema.email %}<p><i class="bi bi-envelope-fill"></i> {{ organization_schema.email }}</p>{% endif %}
-        {% if announcement_url %}<a class="mv-ad-btn mv-ad-btn--footer" href="{{ announcement_url }}">Anuncie aqui</a>{% endif %}
+        {% if announcement_url and announcement_url != '#' %}<a class="mv-ad-btn mv-ad-btn--footer" href="{{ announcement_url }}">Anuncie aqui</a>{% endif %}
       </div>
     </div>
     <div class="mv-footer__bottom">
@@ -197,7 +197,7 @@
     window.__SITE_ANALYTICS__ = { endpoint: "{{ url_for('site.analytics_collect') }}", path: "{{ request.path }}" };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{{ url_for('static', filename='js/site.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/site.js', v='20261103-orange') }}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
