@@ -457,7 +457,8 @@ body{background:var(--paper)}
 .mv-header-quicklinks a:hover,.mv-nav a:hover{background:var(--surface-soft);color:var(--blue)}
 .mv-header-quicklinks a:first-child{color:var(--green)}
 .mv-nav{border-bottom:2px solid #f7c79e}
-.mv-home-link,.mv-home-link:hover{color:var(--blue)!important}
+.mv-home-link{color:var(--ink)!important}
+.mv-home-link:hover,.mv-home-link[aria-current="page"]{color:var(--blue)!important}
 .mv-nav a[aria-current="page"]{color:var(--blue);background:var(--surface-soft)}
 .home-eyebrow,.mv-section-head>div>span,.mv-section-head a,
 .mv-rail-label,.mv-chat-widget__head>span,.mv-chat-link,
@@ -529,6 +530,19 @@ body{background:var(--paper)}
 :root[data-theme="dark"] .mv-editorial-section .mv-section-head a,
 :root[data-theme="dark"] .mv-feature-card .mv-tag{color:#fff}
 :root[data-theme="dark"] .mv-nav a:hover{background:#3d291e}
+:root[data-theme="dark"] .mv-page-head p,
+:root[data-theme="dark"] .recent-body p,
+:root[data-theme="dark"] .mv-product-page-card p,
+:root[data-theme="dark"] .mv-before-card--page p,
+:root[data-theme="dark"] .mv-gallery-card figcaption span,
+:root[data-theme="dark"] .mv-group-card p,
+:root[data-theme="dark"] .mv-news-card p,
+:root[data-theme="dark"] .mv-news-card small,
+:root[data-theme="dark"] .mv-side-news small,
+:root[data-theme="dark"] .news-tile-card p,
+:root[data-theme="dark"] .date-label,
+:root[data-theme="dark"] .meta,
+:root[data-theme="dark"] .mv-chat-item p{color:var(--muted)}
 
 @media(max-width:1199px){
   .mv-hero-grid{grid-template-columns:1fr}
