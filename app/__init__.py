@@ -1,9 +1,11 @@
 import os
+import hmac
+import hashlib
 import threading, time
 from pathlib import Path
 from sqlalchemy import inspect, text
-from flask import Flask
-from flask_login import LoginManager
+from flask import Flask, session, request
+from flask_login import LoginManager, current_user, logout_user
 from dotenv import load_dotenv
 
 from .config import Config
@@ -33,6 +35,15 @@ def _ensure_schema_updates():
             user_statements.append('ALTER TABLE "user" ADD COLUMN created_at TIMESTAMP')
         if "updated_at" not in user_columns:
             user_statements.append('ALTER TABLE "user" ADD COLUMN updated_at TIMESTAMP')
+        for column, definition in (
+            ("whatsapp", "VARCHAR(16)"),
+            ("reset_hash", "VARCHAR(64)"),
+            ("reset_expires", "TIMESTAMP"),
+            ("reset_requested", "TIMESTAMP"),
+            ("reset_attempts", "INTEGER NOT NULL DEFAULT 0"),
+        ):
+            if column not in user_columns:
+                user_statements.append(f'ALTER TABLE "user" ADD COLUMN {column} {definition}')
         if user_statements:
             with db.engine.begin() as conn:
                 for stmt in user_statements:
@@ -183,6 +194,15 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
+    @app.before_request
+    def check_admin_session():
+        if current_user.is_authenticated:
+            expected = hmac.new(app.secret_key.encode(), current_user.password_hash.encode(), hashlib.sha256).hexdigest()
+            if not current_user.is_active or session.get("admin_password_stamp") != expected:
+                logout_user()
+                session.pop("admin_password_stamp", None)
+
+
     app.register_blueprint(site_bp)
     app.register_blueprint(admin_bp)
 
@@ -194,21 +214,22 @@ def create_app():
         _ensure_schema_updates()
         _ensure_defaults()
 
-        admin_email = "admin@admin.com"
-        admin_password = "senha123"
+        admin_email = (os.getenv("ADMIN_EMAIL") or "").strip().lower()
+        admin_password = os.getenv("ADMIN_PASSWORD") or ""
 
-        u = User.query.filter_by(email=admin_email).first()
-        if not u:
-            u = User(email=admin_email, is_admin=True, is_active=True)
-            u.set_password(admin_password)
-            db.session.add(u)
-        else:
-            u.is_admin = True
-            u.is_active = True
-            if not u.password_hash:
+        if admin_email and admin_password:
+            u = User.query.filter_by(email=admin_email).first()
+            if not u:
+                u = User(email=admin_email, is_admin=True, is_active=True)
                 u.set_password(admin_password)
-        db.session.commit()
-        print("ADMIN OK:", admin_email)
+                db.session.add(u)
+            else:
+                u.is_admin = True
+                u.is_active = True
+                if not u.password_hash:
+                    u.set_password(admin_password)
+            db.session.commit()
+            print("ADMIN OK:", admin_email)
 
     if app.config.get("AUTO_SYNC_INTERVAL", 0) and app.config["AUTO_SYNC_INTERVAL"] > 0:
         t = threading.Thread(target=_auto_sync_loop, args=(app,), daemon=True)
